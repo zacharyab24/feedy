@@ -1,0 +1,12 @@
+# Binary
+Feedy
+
+# Database
+data/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
