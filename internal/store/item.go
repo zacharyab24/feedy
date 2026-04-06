@@ -26,9 +26,26 @@ func BulkCreateItems(db *sql.DB, items []models.Item) error {
 	return tx.Commit()
 }
 
+// GetItem retrieves a single item from the database by its ID.
+func GetItem(db *sql.DB, itemId int64) (*models.Item, error) {
+	query := `SELECT id, feed_id, guid, title, link, content, published_at, is_read, is_starred, created_at FROM items WHERE id = ?`
+	row := db.QueryRow(query, itemId)
+	var item models.Item
+	if err := row.Scan(&item.ID, &item.FeedID, &item.GUID, &item.Title, &item.Link, &item.Content, &item.PublishedAt, &item.IsRead, &item.IsStarred, &item.CreatedAt); err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("Item %d not found\n", itemId)
+			return nil, nil
+		}
+		log.Printf("Failed to get item %d: %v\n", itemId, err)
+		return nil, err
+	}
+	log.Printf("Retrieved item %d: %+v\n", itemId, item)
+	return &item, nil
+}
+
 // GetAllItems retrieves all items from the database.
 // Optional feedId can be provided to filter the results.
-func GetAllItems(db *sql.DB, feedId int64) ([]models.Item, error) {
+func GetAllItems(db *sql.DB, feedId int64) ([]*models.Item, error) {
 	query := `SELECT id, feed_id, guid, title, link, content, published_at, is_read, is_starred, created_at FROM items`
 	var args []any
 
@@ -45,13 +62,13 @@ func GetAllItems(db *sql.DB, feedId int64) ([]models.Item, error) {
 	}
 	defer rows.Close()
 
-	var items []models.Item
+	var items []*models.Item
 	for rows.Next() {
 		var item models.Item
 		if err := rows.Scan(&item.ID, &item.FeedID, &item.GUID, &item.Title, &item.Link, &item.Content, &item.PublishedAt, &item.IsRead, &item.IsStarred, &item.CreatedAt); err != nil {
 			return nil, err
 		}
-		items = append(items, item)
+		items = append(items, &item)
 	}
 	log.Printf("Found %d items for feed %d\n", len(items), feedId)
 	return items, nil

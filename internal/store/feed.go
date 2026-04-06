@@ -26,7 +26,7 @@ func CreateFeed(db *sql.DB, title string, url string, siteLink string) (int64, e
 }
 
 // GetFeed retrieves a feed by id from the database and stores it in the provided models.Feed struct.
-func GetFeed(db *sql.DB, id int) (models.Feed, error) {
+func GetFeed(db *sql.DB, id int) (*models.Feed, error) {
 	var f models.Feed
 	query := `SELECT id, title, url, site_link, created_at FROM feeds WHERE id = ?`
 	err := db.QueryRow(query, id).Scan(&f.ID, &f.Title, &f.URL, &f.SiteLink, &f.CreatedAt)
@@ -35,7 +35,7 @@ func GetFeed(db *sql.DB, id int) (models.Feed, error) {
 	} else {
 		log.Printf("Feed retrieved with id: %d\n", id)
 	}
-	return f, err
+	return &f, err
 }
 
 // GetAllFeeds retrieves all feeds from the database and returns them as a slice of models.Feed structs.
