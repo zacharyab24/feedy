@@ -1,2 +1,6 @@
 {{define "add_feed"}}
+<form hx-post="/feeds" method="post">
+    <input type="text" name="url" placeholder="Enter feed URL" required>
+    <button type="submit">Add Feed</button>
+</form>
 {{end}}
