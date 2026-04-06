@@ -1,6 +1,6 @@
 # Feedy
 
-A self-hosted RSS/Atom feed reader built with Go, HTMX, and Tailwind CSS.
+A self-hosted RSS/Atom feed reader built with the GoTH stack (Go, HTMX, and Tailwind CSS).
 
 ## Features
 
