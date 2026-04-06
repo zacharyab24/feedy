@@ -35,12 +35,9 @@ go run main.go
 
 The app will be available at `http://localhost:8081`. The SQLite database is created automatically in `data/`.
 
-### Run with Docker
+### Run with Docker (future)
 
-```sh
-docker build -t feedy .
-docker run -p 8081:8081 -v feedy-data:/app/data feedy
-```
+I havent done the docker stuff yet but will support docker compose
 
 ## Project Structure
 
