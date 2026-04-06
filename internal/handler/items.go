@@ -27,7 +27,7 @@ func (h *Handler) HandleGetItems(w http.ResponseWriter, r *http.Request) {
 	data := Items{
 		Items: items,
 	}
-	h.template.ExecuteTemplate(w, "item_list.html", data)
+	h.template.ExecuteTemplate(w, "item_list", data)
 }
 
 // PATCH /items/:id/read - Toggle item read status
@@ -50,7 +50,7 @@ func (h *Handler) HandleToggleItemRead(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	h.template.ExecuteTemplate(w, "item_row.html", item)
+	h.template.ExecuteTemplate(w, "item_row", item)
 }
 
 // PATCH /items/:id/star - Toggle item star status
@@ -73,7 +73,7 @@ func (h *Handler) HandleToggleItemStar(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	h.template.ExecuteTemplate(w, "item_row.html", item)
+	h.template.ExecuteTemplate(w, "item_row", item)
 }
 
 // Helper function to get the item ID from the request path

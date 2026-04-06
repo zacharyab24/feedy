@@ -1,2 +1,7 @@
 {{define "item_list"}}
+<div class="space-y-4">
+    {{range .Items}}
+    {{template "item_row" .}}
+    {{end}}
+</div>
 {{end}}

@@ -1,2 +1,17 @@
 {{define "item_row"}}
+<article class="p-4 bg-gray-800 rounded {{if .IsRead}}opacity-50{{end}}">
+    <div class="flex justify-between items-start">
+        <a href="{{.Link}}" target="_blank" class="text-blue-400 hover:underline
+  font-medium">{{.Title}}</a>
+        <div class="flex gap-2 ml-4">
+            <button hx-patch="/items/{{.ID}}/read" hx-target="closest article" hx-swap="outerHTML"
+                class="text-sm hover:text-blue-300">{{if
+                .IsRead}}unread{{else}}read{{end}}</button>
+            <button hx-patch="/items/{{.ID}}/star" hx-target="closest article" hx-swap="outerHTML"
+                class="text-sm hover:text-yellow-300">{{if
+                .IsStarred}}unstar{{else}}star{{end}}</button>
+        </div>
+    </div>
+    <p class="text-xs text-gray-400 mt-1">{{.PublishedAt.Format "Jan 02, 2006"}}</p>
+</article>
 {{end}}

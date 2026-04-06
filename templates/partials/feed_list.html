@@ -1,2 +1,18 @@
 {{define "feed_list"}}
+<ul class="space-y-1">
+    <li class="flex justify-between items-center">
+        <a hx-get="/items" hx-target="#item-list" class="hover:text-blue-400 cursor-pointer">
+            All Items
+        </a>
+    </li>
+    {{range .Feeds}}
+    <li class="flex justify-between items-center">
+        <a hx-get="/items?feed_id={{.ID}}" hx-target="#item-list" class="hover:text-blue-400 cursor-pointer truncate">
+            {{.Title}}
+        </a>
+        <button hx-delete="/feeds/{{.ID}}" hx-target="#sidebar nav" hx-swap="innerHTML" hx-confirm="Delete this feed?"
+            class="text-red-400 hover:text-red-300 text-sm ml-2">✕</button>
+    </li>
+    {{end}}
+</ul>
 {{end}}

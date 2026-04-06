@@ -35,14 +35,7 @@ func (h *Handler) HandleAddFeeds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get newly created feed and update template
-	item, err := store.GetAllFeeds(h.db)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	h.template.ExecuteTemplate(w, "feed_list.html", item)
+	h.updateTemplates(w)
 }
 
 // DELETE /feeds/:id
@@ -61,13 +54,7 @@ func (h *Handler) HandleDeleteFeeds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get updated feed and update template
-	item, err := store.GetAllFeeds(h.db)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	h.template.ExecuteTemplate(w, "feed_list.html", item)
+	h.updateTemplates(w)
 }
 
 // POST /feeds/refresh - Refresh all feeds
@@ -96,7 +83,8 @@ func (h *Handler) HandleRefreshFeeds(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	h.template.ExecuteTemplate(w, "item_list.html", items)
+	data := Items{Items: items}
+	h.template.ExecuteTemplate(w, "item_list", data)
 }
 
 // helper to bulk insert items into the database
@@ -134,4 +122,24 @@ func (h *Handler) bulkInsertItems(feed *gofeed.Feed, id int64) error {
 		return err
 	}
 	return nil
+}
+
+func (h *Handler) updateTemplates(w http.ResponseWriter) {
+	// Get updated feed and items and update templates
+	feedData, err := store.GetAllFeeds(h.db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	itemData, err := store.GetAllItems(h.db, 0)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := HomePageData{
+		Feeds: feedData,
+		Items: itemData,
+	}
+	h.template.ExecuteTemplate(w, "feed_list", data)
+	h.template.ExecuteTemplate(w, "item_list_oob", data)
 }
